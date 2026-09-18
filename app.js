@@ -35,11 +35,36 @@ const copyBtn = $('copyBtn');
 const downloadBtn = $('downloadBtn');
 const toast = $('toast');
 
+const rulesBtn = $('rulesBtn');
+const rulesModal = $('rulesModal');
+const closeRulesBtn = $('closeRulesBtn');
+
 const RULE_LABELS = {
   row: 'Baris sama',
   col: 'Kolom sama',
   rect: 'Rectangle',
 };
+
+// ---------- Rules Modal ----------
+rulesBtn.addEventListener('click', () => {
+  rulesModal.classList.add('show');
+});
+
+closeRulesBtn.addEventListener('click', () => {
+  rulesModal.classList.remove('show');
+});
+
+rulesModal.addEventListener('click', (e) => {
+  if (e.target === rulesModal) {
+    rulesModal.classList.remove('show');
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    rulesModal.classList.remove('show');
+  }
+});
 
 // ---------- Mode: Enkripsi / Dekripsi ----------
 modeEnkripsi.addEventListener('click', () => setMode('enkripsi'));
