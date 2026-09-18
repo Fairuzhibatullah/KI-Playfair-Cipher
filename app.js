@@ -69,12 +69,22 @@ fileInput.addEventListener('change', (e) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
-    messageInput.value = ev.target.result;
+    messageInput.value = (ev.target.result || '').replace(/[^a-zA-Z\s]/g, '');
     dropLabel.textContent = 'Berkas dimuat: ' + file.name;
     dropZone.classList.add('has-file');
   };
   reader.readAsText(file);
 });
+
+// Filter input agar hanya menerima huruf alfabet (A-Z, a-z) dan spasi
+keyInput.addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+});
+
+messageInput.addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+});
+
 
 // ---------- Proses utama ----------
 buildBtn.addEventListener('click', runProcess);
