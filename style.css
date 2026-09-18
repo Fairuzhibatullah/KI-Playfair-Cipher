@@ -225,7 +225,27 @@ textarea{min-height:96px;line-height:1.5;}
 .result-box{
   font-family:'IBM Plex Mono', monospace;font-size:14px;line-height:1.6;
   background:var(--cell-bg);border:1px solid var(--border);border-radius:8px;
-  padding:12px;min-height:70px;word-break:break-all;color:var(--ink);
+  padding:12px;min-height:70px;max-height:160px;overflow-y:auto;
+  word-break:break-all;color:var(--ink);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.result-box::-webkit-scrollbar,
+.bigram-list::-webkit-scrollbar {
+  width: 6px;
+}
+.result-box::-webkit-scrollbar-track,
+.bigram-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.result-box::-webkit-scrollbar-thumb,
+.bigram-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+.result-box::-webkit-scrollbar-thumb:hover,
+.bigram-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }
 .result-box.placeholder{color:var(--muted);font-style:italic;}
 

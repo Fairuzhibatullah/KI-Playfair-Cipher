@@ -8,6 +8,7 @@ const state = {
   steps: [],
   currentStep: -1,
   inputMode: 'paste', // 'paste' | 'upload'
+  uploadedFileName: '',
 };
 
 // ---------- DOM references ----------
@@ -67,6 +68,7 @@ function switchInputTab(tab) {
 fileInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
+  state.uploadedFileName = file.name;
   const reader = new FileReader();
   reader.onload = (ev) => {
     messageInput.value = (ev.target.result || '').replace(/[^a-zA-Z\s]/g, '');
@@ -265,7 +267,17 @@ downloadBtn.addEventListener('click', () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = state.mode === 'enkripsi' ? 'ciphertext.txt' : 'plaintext.txt';
+
+  let fileName;
+  if (state.inputMode === 'upload' && state.uploadedFileName) {
+    const baseName = state.uploadedFileName.replace(/\.[^/.]+$/, '');
+    const suffix = state.mode === 'enkripsi' ? '(encrypted)' : '(decrypted)';
+    fileName = `${baseName} ${suffix}.txt`;
+  } else {
+    fileName = state.mode === 'enkripsi' ? '(encrypted).txt' : '(decrypted).txt';
+  }
+
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

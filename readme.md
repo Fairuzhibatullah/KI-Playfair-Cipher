@@ -301,7 +301,7 @@ playfair-cipher/
 * [ ] GUI integration
 * [ ] `.txt` file input
 * [ ] Bigram visualization
-* [ ] `.txt` result download
+* [x] `.txt` result download
 * [ ] Validation dan error handling pada GUI
 * [ ] Final testing
 * [ ] Dokumentasi dan demo
