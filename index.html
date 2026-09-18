@@ -17,9 +17,16 @@
       <h1>Playfair Notebook</h1>
       <p>Susun kata kunci, lihat matriks 5×5 terbentuk, dan ikuti setiap pasangan huruf diproses langkah demi langkah.</p>
     </div>
-    <div class="mode-toggle">
-      <button id="modeEnkripsi" class="active">Enkripsi</button>
-      <button id="modeDekripsi">Dekripsi</button>
+
+    <div class="header-actions">
+      <button class="header-rules-btn" id="rulesBtn">
+        Lihat Rules
+      </button>
+
+      <div class="mode-toggle">
+        <button id="modeEnkripsi" class="active">Enkripsi</button>
+        <button id="modeDekripsi">Dekripsi</button>
+      </div>
     </div>
   </div>
 
@@ -94,7 +101,306 @@
     </div>
   </div>
 
-  <p class="footnote">Aturan: I/J digabung · padding utama X, fallback Q · same row → geser kanan/kiri · same column → geser bawah/atas · rectangle → tukar kolom.</p>
+  <footer class="site-footer">
+    <span>© 2026 Playfair Notebook</span>
+    <span>·</span>
+    <span>Keamanan Informasi 1 · Kelompok 1</span>
+  </footer>
+</div>
+
+<!-- RULES MODAL -->
+<div class="modal-overlay" id="rulesModal">
+  <div class="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+
+    <div class="modal-header">
+      <div>
+        <span class="modal-label">PLAYFAIR CIPHER</span>
+        <h2 id="rulesTitle">Aturan Playfair Cipher</h2>
+        <p class="hint">
+          Konfigurasi aturan yang digunakan pada project ini.
+        </p>
+      </div>
+
+      <button class="modal-close" id="closeRulesBtn" aria-label="Tutup">
+        ×
+      </button>
+    </div>
+
+    <div class="rules-content">
+
+      <!-- Konfigurasi -->
+      <section class="rules-section">
+        <h3>Konfigurasi</h3>
+
+        <div class="rules-table">
+          <div class="rules-row rules-head">
+            <span>Konfigurasi</span>
+            <span>Aturan</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Ukuran Matrix</span>
+            <span>5×5</span>
+          </div>
+
+          <div class="rules-row">
+            <span>I/J Handling</span>
+            <span>I dan J digabung</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Alphabet</span>
+            <span>A-Z tanpa J</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Matrix Fill</span>
+            <span>Row by Row</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Key Processing</span>
+            <span>Uppercase, A-Z, J → I, hapus duplikasi</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Text Processing</span>
+            <span>Uppercase, A-Z, J → I</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Bigram</span>
+            <span>Sequential dari kiri ke kanan</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Padding</span>
+            <span>Selalu X</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Same Row Encryption</span>
+            <span>Geser ke kanan</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Same Column Encryption</span>
+            <span>Geser ke bawah</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Rectangle</span>
+            <span>Tukar kolom</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Same Row Decryption</span>
+            <span>Geser ke kiri</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Same Column Decryption</span>
+            <span>Geser ke atas</span>
+          </div>
+
+          <div class="rules-row">
+            <span>Rectangle Decryption</span>
+            <span>Tukar kolom</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- I/J -->
+      <section class="rules-section">
+        <h3>1. I/J Handling</h3>
+        <p>
+          Huruf <strong>I</strong> dan <strong>J</strong> dianggap sebagai
+          karakter yang sama. Huruf J dikonversi menjadi I dan tidak digunakan
+          dalam matrix.
+        </p>
+
+        <div class="code-example">
+          ABCDEFGHIKLMNOPQRSTUVWXYZ
+        </div>
+      </section>
+
+      <!-- Key Processing -->
+      <section class="rules-section">
+        <h3>2. Key Processing</h3>
+        <p>Key diproses dengan urutan:</p>
+
+        <ol>
+          <li>Diubah menjadi uppercase.</li>
+          <li>Karakter selain A-Z dihapus.</li>
+          <li>J diubah menjadi I.</li>
+          <li>Karakter duplikat dihapus dengan mempertahankan kemunculan pertama.</li>
+          <li>Sisa alphabet ditambahkan sampai matrix berisi 25 karakter.</li>
+        </ol>
+
+        <div class="example-block">
+          <span class="example-label">Contoh key: MONARCHY</span>
+
+          <pre>M O N A R
+C H Y B D
+E F G I K
+L P Q S T
+U V W X Z</pre>
+        </div>
+      </section>
+
+      <!-- Text Processing -->
+      <section class="rules-section">
+        <h3>3. Text Preprocessing</h3>
+
+        <p>Plaintext diproses dengan:</p>
+
+        <ol>
+          <li>Uppercase.</li>
+          <li>Karakter selain A-Z dihapus.</li>
+          <li>J diubah menjadi I.</li>
+          <li>Plaintext kemudian diproses menjadi pasangan karakter atau bigram.</li>
+        </ol>
+
+        <div class="example-block">
+          <span class="example-label">Contoh</span>
+
+          <div class="example-line">
+            <code>Hello, World!</code>
+            <span>→</span>
+            <code>HELLOWORLD</code>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bigram -->
+      <section class="rules-section">
+        <h3>4. Pembentukan Bigram</h3>
+
+        <p>
+          Plaintext diproses dari kiri ke kanan. Jika dua karakter dalam satu
+          pasangan sama, filler X disisipkan di antaranya.
+        </p>
+
+        <div class="example-block">
+          <span class="example-label">Contoh</span>
+
+          <div class="example-line">
+            <code>HELLO</code>
+            <span>→</span>
+            <code>HE · LX · LO</code>
+          </div>
+        </div>
+
+        <p>
+          Jika jumlah karakter terakhir ganjil, filler X ditambahkan pada
+          karakter terakhir.
+        </p>
+
+        <div class="example-block">
+          <div class="example-line">
+            <code>CAT</code>
+            <span>→</span>
+            <code>CA · TX</code>
+          </div>
+        </div>
+
+        <p>
+          Jika karakter yang membutuhkan filler adalah X, tetap gunakan X.
+          Dengan demikian pasangan seperti <strong>XX</strong> dapat terbentuk
+          dan diproses oleh algoritma.
+        </p>
+      </section>
+
+      <!-- Encryption -->
+      <section class="rules-section">
+        <h3>5. Aturan Enkripsi</h3>
+
+        <div class="rule-item">
+          <span class="rule-name">Same Row</span>
+          <p>
+            Jika kedua karakter berada pada baris yang sama, masing-masing
+            karakter digeser satu posisi ke kanan. Jika mencapai ujung baris,
+            kembali ke awal.
+          </p>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-name">Same Column</span>
+          <p>
+            Jika kedua karakter berada pada kolom yang sama, masing-masing
+            karakter digeser satu posisi ke bawah. Jika mencapai bagian bawah,
+            kembali ke bagian atas.
+          </p>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-name">Rectangle</span>
+          <p>
+            Jika kedua karakter berada pada baris dan kolom yang berbeda,
+            kolom kedua karakter ditukar sementara baris tetap.
+          </p>
+        </div>
+      </section>
+
+      <!-- Decryption -->
+      <section class="rules-section">
+        <h3>6. Aturan Dekripsi</h3>
+
+        <div class="rule-item">
+          <span class="rule-name">Same Row</span>
+          <p>
+            Geser masing-masing karakter satu posisi ke kiri dengan wrapping.
+          </p>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-name">Same Column</span>
+          <p>
+            Geser masing-masing karakter satu posisi ke atas dengan wrapping.
+          </p>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-name">Rectangle</span>
+          <p>
+            Tukar kolom kedua karakter. Aturan rectangle sama dengan proses
+            enkripsi.
+          </p>
+        </div>
+      </section>
+
+      <!-- Example -->
+      <section class="rules-section">
+        <h3>Contoh</h3>
+
+        <div class="example-block">
+          <span class="example-label">Key</span>
+          <code>MONARCHY</code>
+
+          <span class="example-label">Plaintext</span>
+          <code>HELLO</code>
+
+          <span class="example-label">Bigram</span>
+          <code>HE · LX · LO</code>
+
+          <span class="example-label">Enkripsi</span>
+          <code>HE → CF</code>
+          <code>LX → SU</code>
+          <code>LO → PM</code>
+
+          <span class="example-label">Ciphertext</span>
+          <code>CFSUPM</code>
+        </div>
+      </section>
+
+      <div class="rules-note">
+        <strong>Catatan:</strong>
+        X yang muncul pada hasil dekripsi merupakan filler yang ditambahkan
+        saat pembentukan bigram. Filler tidak dihapus otomatis karena X juga
+        dapat merupakan bagian asli dari plaintext.
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast">Disalin ke clipboard</div>
