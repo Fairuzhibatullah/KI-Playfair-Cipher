@@ -101,17 +101,21 @@ function runProcess() {
 
   state.matrix = buildMatrix(rawKey);
 
-  const pairs = state.mode === 'enkripsi'
-    ? buildBigramsForEncryption(cleanMessage)
-    : chunkBigramsForDecryption(cleanMessage);
+  try {
+    const pairs = state.mode === 'enkripsi'
+      ? buildBigramsForEncryption(cleanMessage)
+      : chunkBigramsForDecryption(cleanMessage);
 
-  state.steps = pairs.map(([a, b]) => processPair(state.matrix, a, b, state.mode));
-  state.currentStep = 0;
+    state.steps = pairs.map(([a, b]) => processPair(state.matrix, a, b, state.mode));
+    state.currentStep = 0;
 
-  renderMatrix();
-  renderBigramList();
-  renderStep();
-  renderResult();
+    renderMatrix();
+    renderBigramList();
+    renderStep();
+    renderResult();
+  } catch (error) {
+    alert(error.message);
+  }
 }
 
 function resetOutput() {

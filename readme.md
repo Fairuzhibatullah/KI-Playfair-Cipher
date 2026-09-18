@@ -39,8 +39,7 @@ Project ini menggunakan konfigurasi aturan berikut agar implementasi algoritma, 
 | Key Processing         | Uppercase, hanya A-Z, J → I, hapus duplikasi     |
 | Text Processing        | Uppercase, hanya A-Z, J → I                      |
 | Bigram                 | Sequential dari kiri ke kanan                    |
-| Padding Utama          | X                                                |
-| Padding Fallback       | Q jika karakter yang membutuhkan filler adalah X |
+| Padding                | Selalu X (tidak ada fallback)                    |
 | Same Row Encryption    | Geser ke kanan                                   |
 | Same Column Encryption | Geser ke bawah                                   |
 | Rectangle Encryption   | Tukar kolom                                      |
@@ -113,7 +112,7 @@ Plaintext diproses dari kiri ke kanan.
 
 Jika dua karakter dalam satu pasangan sama, filler disisipkan di antara keduanya.
 
-Filler utama yang digunakan adalah `X`.
+Filler yang digunakan selalu `X`.
 
 Contoh:
 
@@ -143,7 +142,7 @@ menjadi:
 CA TX
 ```
 
-Jika karakter yang membutuhkan filler adalah `X`, digunakan `Q` sebagai fallback agar tidak membentuk pasangan `XX`.
+Jika karakter yang membutuhkan filler adalah `X`, tetap gunakan `X`. Aturan ini memungkinkan terbentuknya pasangan `XX`, yang akan diproses secara valid oleh algoritma (digeser ke kanan).
 
 Contoh:
 
@@ -154,7 +153,7 @@ FOXX
 diproses menjadi:
 
 ```text
-FO XQ XQ
+FO XX XX
 ```
 
 ### 5. Aturan Enkripsi

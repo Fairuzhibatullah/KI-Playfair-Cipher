@@ -1,12 +1,13 @@
 // playfair.js
 // Implementasi algoritma Playfair Cipher sesuai aturan pada README:
 // - Matrix 5x5, alphabet A-Z tanpa J (J digabung ke I)
-// - Padding utama X, fallback Q jika karakter yang butuh filler adalah X
+// - Padding X untuk semua kondisi (tidak ada fallback)
 // - Same row -> geser kanan (enkripsi) / kiri (dekripsi)
 // - Same column -> geser bawah (enkripsi) / atas (dekripsi)
 // - Rectangle -> tukar kolom (sama untuk enkripsi & dekripsi)
 
 const ALPHABET = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // tanpa huruf J
+
 
 /**
  * Membangun matrix 5x5 dari sebuah key.
@@ -61,9 +62,8 @@ function preprocessText(raw) {
 
 /**
  * Memecah teks menjadi bigram untuk ENKRIPSI, termasuk penyisipan filler:
- * - Jika dua karakter berurutan sama, sisipkan filler (X, atau Q jika
- *   karakter tersebut sendiri adalah X) di antaranya.
- * - Jika karakter terakhir tidak berpasangan, tambahkan filler yang sama.
+ * - Jika dua karakter berurutan sama, sisipkan filler X di antaranya.
+ * - Jika karakter terakhir tidak berpasangan, tambahkan filler X.
  */
 function buildBigramsForEncryption(text) {
   const arr = text.split('');
@@ -75,7 +75,7 @@ function buildBigramsForEncryption(text) {
 
     if (i + 1 >= arr.length) {
       // karakter terakhir sendirian -> tambahkan filler
-      const filler = a === 'X' ? 'Q' : 'X';
+      const filler = 'X';
       pairs.push([a, filler]);
       i += 1;
       continue;
@@ -84,7 +84,7 @@ function buildBigramsForEncryption(text) {
     const b = arr[i + 1];
     if (a === b) {
       // pasangan huruf sama -> sisipkan filler, huruf kedua diproses ulang
-      const filler = a === 'X' ? 'Q' : 'X';
+      const filler = 'X';
       pairs.push([a, filler]);
       i += 1;
     } else {
@@ -99,17 +99,16 @@ function buildBigramsForEncryption(text) {
 /**
  * Memecah ciphertext menjadi bigram untuk DEKRIPSI.
  * Ciphertext diasumsikan sudah berupa pasangan huruf yang valid (genap).
- * Jika ganjil (input tidak standar), karakter terakhir dilengkapi 'X'.
+ * Jika ganjil (input tidak standar), akan melemparkan Error.
  */
 function chunkBigramsForDecryption(text) {
   const arr = text.split('');
+  if (arr.length % 2 !== 0) {
+    throw new Error("Ciphertext harus memiliki jumlah karakter genap.");
+  }
   const pairs = [];
   for (let i = 0; i < arr.length; i += 2) {
-    if (i + 1 < arr.length) {
-      pairs.push([arr[i], arr[i + 1]]);
-    } else {
-      pairs.push([arr[i], 'X']);
-    }
+    pairs.push([arr[i], arr[i + 1]]);
   }
   return pairs;
 }
