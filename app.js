@@ -1,6 +1,49 @@
 // app.js
 // Menghubungkan GUI (index.html) dengan algoritma Playfair Cipher di playfair.js
 
+// ---------- Error banner global ----------
+// Jika ada error JavaScript yang tidak tertangani, tampilkan di halaman
+// (bukan diam-diam gagal) agar mudah didiagnosis.
+window.addEventListener('error', (e) => {
+  showFatalError(e.message + (e.filename ? ' (' + e.filename + ':' + e.lineno + ')' : ''));
+});
+
+function showFatalError(message) {
+  let banner = document.getElementById('fatalErrorBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'fatalErrorBanner';
+    banner.style.position = 'fixed';
+    banner.style.top = '0';
+    banner.style.left = '0';
+    banner.style.right = '0';
+    banner.style.background = '#B5482F';
+    banner.style.color = '#fff';
+    banner.style.padding = '10px 16px';
+    banner.style.fontFamily = 'monospace';
+    banner.style.fontSize = '13px';
+    banner.style.zIndex = '9999';
+    document.body.prepend(banner);
+  }
+  banner.textContent = 'Terjadi error pada script: ' + message;
+}
+
+// Batas ukuran berkas .txt yang boleh diunggah (dalam byte).
+const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
+
+// Jalankan semua wiring setelah DOM benar-benar siap, agar tidak gagal
+// total hanya karena satu elemen belum ter-render saat script dieksekusi.
+document.addEventListener('DOMContentLoaded', initApp);
+// Jaga-jaga jika DOMContentLoaded sudah terlewat saat script ini dimuat
+// (misalnya script diletakkan di <head> pada versi lain).
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  initApp();
+}
+
+function initApp() {
+  if (window.__playfairAppInitialized) return;
+  window.__playfairAppInitialized = true;
+
 // ---------- State ----------
 const state = {
   mode: 'enkripsi',   // 'enkripsi' | 'dekripsi'
@@ -90,28 +133,35 @@ function switchInputTab(tab) {
   uploadRow.classList.toggle('visible', tab === 'upload');
 }
 
+const uploadError = $('uploadError');
+
 fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
+  handleIncomingFile(e.target.files[0]);
+});
+
+// Guard juga untuk drag-and-drop ke area upload
+dropZone.addEventListener('dragover', (e) => e.preventDefault());
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  handleIncomingFile(file);
+});
+
+function handleIncomingFile(file) {
   if (!file) return;
-  state.uploadedFileName = file.name;
   const reader = new FileReader();
   reader.onload = (ev) => {
-    messageInput.value = (ev.target.result || '').replace(/[^a-zA-Z\s]/g, '');
+    messageInput.value = ev.target.result;
     dropLabel.textContent = 'Berkas dimuat: ' + file.name;
     dropZone.classList.add('has-file');
   };
+  reader.onerror = () => {
+    uploadError.textContent = 'Gagal membaca berkas. Pastikan berkas adalah teks biasa (.txt).';
+    uploadError.style.display = 'block';
+    fileInput.value = '';
+  };
   reader.readAsText(file);
 });
-
-// Filter input agar hanya menerima huruf alfabet (A-Z, a-z) dan spasi
-keyInput.addEventListener('input', (e) => {
-  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-});
-
-messageInput.addEventListener('input', (e) => {
-  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-});
-
 
 // ---------- Proses utama ----------
 buildBtn.addEventListener('click', runProcess);
@@ -321,3 +371,5 @@ function showToast(msg) {
 // ---------- Inisialisasi ----------
 state.matrix = buildMatrix(keyInput.value);
 renderMatrix();
+
+} // akhir initApp()
