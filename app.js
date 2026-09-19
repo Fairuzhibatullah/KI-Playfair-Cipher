@@ -149,6 +149,31 @@ dropZone.addEventListener('drop', (e) => {
 
 function handleIncomingFile(file) {
   if (!file) return;
+
+  if (uploadError) uploadError.style.display = 'none';
+
+  // Validasi tipe berkas (.txt)
+  if (file.name && !file.name.toLowerCase().endsWith('.txt') && file.type && !file.type.startsWith('text/')) {
+    if (uploadError) {
+      uploadError.textContent = 'Hanya berkas .txt yang diperbolehkan.';
+      uploadError.style.display = 'block';
+    }
+    fileInput.value = '';
+    return;
+  }
+
+  // Validasi batas ukuran berkas (2 MB)
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    if (uploadError) {
+      uploadError.textContent = 'Ukuran berkas melebihi batas maksimum 2 MB.';
+      uploadError.style.display = 'block';
+    }
+    fileInput.value = '';
+    return;
+  }
+
+  state.uploadedFileName = file.name;
+
   const reader = new FileReader();
   reader.onload = (ev) => {
     messageInput.value = ev.target.result;
@@ -156,11 +181,21 @@ function handleIncomingFile(file) {
     dropZone.classList.add('has-file');
   };
   reader.onerror = () => {
-    uploadError.textContent = 'Gagal membaca berkas. Pastikan berkas adalah teks biasa (.txt).';
-    uploadError.style.display = 'block';
+    if (uploadError) {
+      uploadError.textContent = 'Gagal membaca berkas. Pastikan berkas adalah teks biasa (.txt).';
+      uploadError.style.display = 'block';
+    }
     fileInput.value = '';
   };
   reader.readAsText(file);
+}
+
+// Filter input agar hanya menerima huruf alfabet (A-Z, a-z) dan spasi
+keyInput.addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+});
+messageInput.addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
 });
 
 // ---------- Proses utama ----------

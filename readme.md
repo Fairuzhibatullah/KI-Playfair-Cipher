@@ -298,10 +298,10 @@ playfair-cipher/
 * [x] Bigram generation
 * [x] Encryption
 * [x] Decryption
-* [ ] GUI integration
-* [ ] `.txt` file input
-* [ ] Bigram visualization
+* [x] GUI integration
+* [x] `.txt` file input
+* [x] Bigram visualization
 * [x] `.txt` result download
-* [ ] Validation dan error handling pada GUI
+* [x] Validation dan error handling pada GUI
 * [ ] Final testing
 * [ ] Dokumentasi dan demo
