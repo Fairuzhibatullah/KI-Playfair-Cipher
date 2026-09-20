@@ -2,7 +2,7 @@
 
 # Playfair Cipher
 
-Implementasi Playfair Cipher berbasis **HTML, CSS, dan JavaScript vanilla** untuk tugas mata kuliah **Keamanan Informasi 1**.
+Implementasi Playfair Cipher berbasis **HTML, CSS, dan JavaScript** untuk tugas mata kuliah **Keamanan Informasi 1**.
 
 Aplikasi ini dirancang untuk melakukan enkripsi dan dekripsi menggunakan algoritma Playfair Cipher dengan matrix 5×5 yang dibentuk secara dinamis berdasarkan key.
 
@@ -303,5 +303,5 @@ playfair-cipher/
 * [x] Bigram visualization
 * [x] `.txt` result download
 * [x] Validation dan error handling pada GUI
-* [ ] Final testing
-* [ ] Dokumentasi dan demo
+* [x] Final testing
+* [x] Dokumentasi
